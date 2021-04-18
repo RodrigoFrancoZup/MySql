@@ -1,0 +1,81 @@
+Capítulo 01 - Configurando ambiente e conhecendo o SQL.
+Nesse capítulo aprendemos:
+⦁	Principais vantagens do SQL são: é uma linguagem simples e que segue um padrão, logo o custo de treinamento é reduzido (aprendeu o SQL de um banco você será capaz de usar qualquer outro banco SQL);
+⦁	SQL é um padrão bom para se utilizar no projeto, pois garantirá o funcionamento por um logo prazo, já que fazer migração de um Banco de Dados SQL para outro do mesmo tipo (SQL) é fácil;
+⦁	Criamos a base de dados Sucos_Vendas;
+⦁	Recuperamos a base de dados através do Import/Restore -> Dump   Camiho Completo: Aba Administation -> Data Import/Restore -> Import from Dump Project Folder e selecione a pasta Dump -> Start Import.
+
+Capítulo 02 - Filtando as consultas de dados
+Nesse capítulo aprendemos:
+⦁	Devemos conhecer o banco de dado (sua estrutura) antes de excutar as consultas. Podemos conhecê-lo atarvés do Workbench, vendo a hierarquia de tabelas ou então criar um modelo da base de dados com a Engenharia Reversa (Database -> Reverse Engineer);
+⦁	Revisão do SELECT que já fizemos no primeiro curso de MySql;
+⦁	Vimos as consultas condificonais, ou seja, SELECT * FROM NomeTabele WHERE EscreveSuaCondicaoDeFilto;
+⦁	Que as CondicoesDeFiltros podem ser compostas, ou seja, UmmCondicao OR (ou) OutraCondicao. UmaCondicao AND (e) OutraCondicao. NOT UmaCondicao (altera seu valor booleana);
+⦁	Aprendemos que:					                                     
+	V AND V = V   			                                                          
+	V AND F = F 									        
+	F AND V = F 					                                                  
+	F AND F = F
+        V OR V = V   			                                                                                                    	
+	V OR F = V									                             	
+	F OR V = V 					                                                                                                                       	
+	F OR F = F
+⦁	A utilizar o Filtro SELECT + IN. O IN faz uma comparaçao do tipo OR com o valor do campo. Exemplo: SELECT * FROM clientes WHERE cidade IN ('Pouso Alegre', 'São Paulo'). Aqui irá pegar todos clientes cuja cidade é Pouso Alegre ou São Paulo;
+⦁	Mais um comando de filtro, no caso o LIKE, esse comando irá verificar a presença de um texto em um campo do tipo VARCHAR. O texto a ser procurado no campo pode estar no começo, meio ou fim, o que vai limitar é o simbolo %. Exemplo de uso: SELECT * FROM aluno WHERE nome LIKE ('%Silva%'), nesse caso vai procurar o texto silva no campo nome de todos alunos e não importa a posição, pois o simbolo % representa qualquer coisa. Se eu quisesse pegar alunos cujo nome termina com silva a busca seria por ('%Silva'). Alunos que começam com silva seria ('Silva%')
+
+Capítulo 03 - Apresentação dos dados de uma consulta.
+Nesse capítulo aprendemos:
+⦁	O uso do comando DISTINCT. Ele é usado na consulta para eliminar registros com valores iguais (vai depender dos Campos que você colocará para exibir). Exemplo:                                                                     SELECT * FROM PRODUTO => Exibe todos os produtos, e vai ter produto com sabores repetidos, pois tem Suco 1l de Maça, tem Suco de 200ml de Maça, tem vitamina de 500ml de Maça.                                    SELECT sabor FROM PRODUTO => Ainda exibirá os sabores repetidos, pois está mostrando aqui sabor de todos produtos.                        Agora se usar SELECT DISTINCT sabor FROM produto o resultado será apenas de sabores diferentes, Maça vai aparecer somente uma vez.
+⦁	Temos que ter atenção ao usar função COUNT(), pois sem usar DISTINCT o COUNT irá contar as repetições! É isso que queremos? Talvez sim ou não.
+⦁	Aprendemos a usar o LIMIT, para limitar a resposta da consulta. O LIMIT deve estar sempre no fim do comando. LIMIT 5 irá mostrar apenas os 5 primeiros. 
+⦁	Podemos também usar o LIMIT 2,3 (ou outros valores) nesse exemplo significa que a listagem irá mostrar apenas 3 elementos e que irá começar depois do 2 elemento.
+⦁	Há como ordernar a listagem. Usamos para isso o comando ORDER BY. No fim ainda podemos falar se é ASC (PADRAO) ou DESC. ASC é do menor pro maior, já desc é do maior para menor.                       Exemplo: SELECT * FROM aluno ORDER BY nome (irá ordernar por ordem alfabetica);
+⦁	O comando ORDER BY aceita mais de um campo,                             Exemplo: SELECT * FROM aluno ORDER BY situacao, nome. Nesse caso ele exibira primeiro os alunos aprovados, pois A de Aprovado vem antes do R de Reprovado (SITUACAO). Depois a analise é por nome do aluno, ou seja, primeiro da listagem será alunos aprovados e que o nome começa com letra A...
+⦁	Existe funçoes que retornam o maior valor, o menor, a média, a quantidade de ocorreência (contador). Código das funções:
+		-MIN() = Retorna o menor valor;
+		-MAX() = Retorna o maior valor,
+		-AVG() = Faz a média dos campos;
+		-COUNT() = É o contador de ocorrências;
+	OBS: Podemos usar essas funções juntamente com GROUP BY. 
+	Exemplo de uso: SELECT AVG(notas) AS media_alunos, situacao FROM ALUNOS WHERE situação = 'Aprovado' GROUP BY (situacao). ]
+	Repare que devemos somar as notas que é um campo da tabela alunos e no fim agrupar pelo campo em comum a vários alunos (que permite agrupamento)! Nesse exemplo o resultado seria NumeroDeAlunosAprovado | Aprovado.
+⦁	Podemos usar as funções sem GROUP BY, neste caso após o select só pode ter a função.                                                                               Exemplo: SELECT SUM(NOTA) FROM ALUNOS; Irá exibir o total da nota de todos alunos;
+⦁	Depois do GROUP BY podemos usar o ORDER BY;
+⦁	Como filtrar uma agregação, ou seja, depois de fazermos um GROUP BY? Para aplicar o filltro aqui usaremos o comando HAVING! Ele vem depois do GROUP BY.
+⦁	É possível fazer verificações com o comando CASE. Esse é bem similar o IF ou CASE de linguagem de programação, no caso ele funciona assim, CASO tal fato ocorra façoa isso!                                     Exemplo:
+
+⦁	REGRINHA BÁSICA: FUNÇÕES SEMPRE VEM NO COMEÇO, APÓS SELECT. JÁ O ORDER BY E GROUP BY SEMPRE NO FIM!
+
+Capítulo 04 - Juntando tabelas e consultas.
+Nesse capítulo aprendemos:
+⦁	Podemos juntar em uma consulta dados de duas ou mais tabelas. O comando para isso é o JOIN. Temos vários tipos de JOIN, são eles:
+	1.	INNER JOIN = Junta duas tabelas e mostra apenas os registros correspondentes (só os que a condição ON  bate);
+	2.	LEFT JOIN = Junta duas tabelas, irá trazer todos registros da tabela que está a esquerda do comando JOIN e os registros da tabela da direita serão apenas os que seguem a condição ON.
+	3.	RIGHT JOIN = Junta duas tabelas, irá trazer todos registros da tabela que está a direita do comando JOIN e os registros da tabela da esquerda serão apenas os que seguem a condição ON.
+	4.	CROSS JOIN = Não usa comando JOIN. Usa-se apenas duas tabelas após o comando SELECT. É feito um produto carteseado das tabelas envolvidas. Se aplicarmos um filtro com WHERE esse JOIN acaba virando um INNER JOIN
+	5.	FULL JOIN = Junta duas tabelas e traz tudo de todas as tabelas. Onde não há correspondente da codição ON virá com valor NULL. OBS: MySql não implementa FULL JOIN. Temos que juntar Left e Right para criar um full, a união se dá com o comando UNION.
+
+⦁	Podemos juntar duas consultas (dois Selects). Há dois comandos para isso o UNION e UNION ALL. O primeiro aplica união aplicando o distinct, ou seja, não haverá repetição. Já o segundo permite repetir valores. ATENÇÃO: para UNION funcionar deve haver a mesma quantidade de campos nos dois SELECTS e devem ser do MESMO TIPO (Por exemplo: VARCHAR COM VARCHAR..) Exemplo:   SELECT bairro FROM cliente UNION SELECT bairro FROM vendedor;
+⦁	Podemos fazer uma Sub-Consulta, para isso vamos fazer um SELECT e depois no filtro WHERE virá outro SELECT.
+⦁	Podemos  criar VISÃO. Essa é uma estrutura do banco que transforma o resultado de uma consulta em uma Tabela e depois podemos usar essa view com outras consultas, fazer junção com ela.. Para criar uma VIEW basta pegar o SQL de consulta e ir em VIEWS e  Create View. Cada SCHEMA de banco tem suas VIEWS.
+
+Capítulo 05 - Funções do MYSQL
+Nesse capítulo aprendemos:
+⦁	Aprendemos que todo Banco de Dados possui suas funções e que essas não seguem o padrao ANSI, logo é díficil ao trocar o Banco as funções continuarem funcionando, vai precisar de ajuste!;
+⦁	São muitas funções, então devemos consultar a documentação oficial ou sites como: https://www.w3schools.com/sql/sql_ref_mysql.asp
+⦁	Podemos escrever funções sem vincula-las a uma tabela, ou seja, sem FROM. Basta passar o argumento que ela precisa. Exemplo do uso da funcao CONCAT, ela junta textos: SELECT CONCAT("Olá, ", "Mundo! ", "Mysql ", "Funções!") AS resultado;
+⦁	Ha funçoes para muitas coisas, há para maniuplar string (VARCHAR), manipular Datas, manipular (converter) tipos (FLOAT para VARCHAR), entre outros...
+
+Capítulo 06 - Exemplos de Relatório
+Nesse capítulo aprendemos:
+⦁	Devemos tomar cuidado em gerar relatório que exigem Agrupamento e que poussem campos do tipo DATE, pois se o relátorio exgir informação mensal ou anual devemos descartar da data o dia e/ou mês, pois esses fatores vão impedir de fazer o agrupamento correto! 
+⦁	Devemos tomar cuidado também em gerar relatório quando o registro possua um valor fixo, por exemplo. Cliente possui limite de compra mensal, ao fazer um agrupamento com cliente esse limite pode ser somado (pois ele tb será agrupado) e isso é errado, pois seu limite não foi realmente alterado! Logo se formos fazer um agrupamento com cliente o campo limire deve ser agrupado pela função MAX()!
+⦁	INNER JOIN também pode juntar duas consultas.
+
+
+Iniando o curso:  Consultas SQL - Avançando no SQL com MySQL
+
+Link do curso: https://cursos.alura.com.br/course/mysql-consultas-sql
+
+Repositório: https://github.com/RodrigoFrancoZup/MySql
+
